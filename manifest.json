@@ -1,0 +1,45 @@
+{
+    "manifest_version": 3,
+    "name": "Admin trustsites",
+    "version": "1.0",
+    "description": "tool help content",
+    "icons": {
+        "16": "avatar_extension.png"
+    },
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+      },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "popup.html",
+                "avatar_extension.png"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "content_scripts": [
+        {
+            "js": [
+                "scripts/content.js",
+                "scripts/index.js"
+            ],
+            "matches": ["<all_urls>"]
+        }
+    ],
+    "permissions": [
+        "clipboardWrite",
+        "scripting",
+        "tabs",
+        "activeTab",
+        "storage"],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+          "16": "avatar_extension.png"
+        }
+      }
+}

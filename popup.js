@@ -27,6 +27,7 @@ chrome.runtime.onMessage.addListener(
     if (request.type === "lastest_update_popup" && request.domain === currentDomain) {
       let data_all_popup = JSON.parse(request.data);
       $("#list_keyword_ex").val(data_all_popup.list_keyword);
+      $("#list_service_ex").val(data_all_popup.list_service);
       $("#desc_ex").val(data_all_popup.desc);
       $("#address_ex").val(data_all_popup.address);
       add_input("phone", data_all_popup.phone);
@@ -63,7 +64,7 @@ function doSomething() {
 
 
     var timeout = null;
-    $('#list_keyword_ex, #phone_ex, #email_ex, #address_ex, #desc_ex').on('input', function () {
+    $('#list_keyword_ex, #list_service_ex, #phone_ex, #email_ex, #address_ex, #desc_ex').on('input', function () {
       clearTimeout(timeout);
       timeout = setTimeout(function () {
         // let data_tmp = JSON.parse(chrome.storage.local.get([currentDomain]));
@@ -86,6 +87,7 @@ function doSomething() {
       $("#loadingSpinner").hide();
 
       let list_keyword = $("#list_keyword_ex").val();
+      let list_service = $("#list_service_ex").val();
       let desc = $("#desc_ex").val();
       let phone = $("#phone_ex").val();
       let email = $("#email_ex").val();
@@ -107,9 +109,10 @@ function doSomething() {
         url: 'https://trustsites.net/tool/trung/api_extension/update_domain.php',
         data: {
           key: 'HPHA*HFN$%*',
-          auther_email: 'trungnguyen228801@gmail.com',
+          auther_email: 'anhthuh481@gmail.com',
           domain: currentDomain,
           list_keyword,
+          list_service,
           desc,
           phone,
           email,
@@ -192,6 +195,16 @@ function add_href2(name_social, href, new_href) {
     }
   }
 }
+function add_href3(name_social, href, new_href) {
+  if(href != new_href){
+    if (new_href != '' && new_href != '#') {
+      $(".button-list ." + name_social + " button").removeClass("btn-outline-secondary").addClass("btn-outline-success");
+    }else{
+      $(".button-list ." + name_social + " button").removeClass("btn-outline-success").removeClass("btn-outline-warning").addClass("btn-outline-secondary");
+    }
+    $(".button-list ." + name_social).attr("href", new_href);
+  }
+}
 function add_input(name_elm, val) {
   if (val != '') {
     $("#" + name_elm + "_ex").val(val);
@@ -215,6 +228,7 @@ function set_data_local_storage(editing) {
   sendMessage(activeTab, "SET_DATA_LOCAL_STORAGE", {
     data_ex: JSON.stringify({
       list_keyword: $("#list_keyword_ex").val(),
+      list_service: $("#list_service_ex").val(),
       desc: $("#desc_ex").val(),
       address: $("#address_ex").val(),
       phone: $("#phone_ex").val(),
@@ -263,6 +277,7 @@ function check_domain(obj_editing){
                 $("#btn_send_data").text("Add");
               }
               $("#list_keyword_ex").val(data_tmp.list_keyword);
+              $("#list_service_ex").val(data_tmp.list_service);
               $("#desc_ex").val(data_tmp.desc);
               $("#address_ex").val(data_tmp.address);
               add_input("phone", data_tmp.phone);
@@ -283,6 +298,7 @@ function check_domain(obj_editing){
 
               if (res.code == 'have') {
                 $("#list_keyword_ex").val(res.list_keyword);
+                $("#list_service_ex").val(res.list_service);
                 $("#desc_ex").val(res.desc);
                 $("#address_ex").val(res.address);
                 let isHasDataSecond = false;
@@ -334,3 +350,20 @@ function update_btn_editing_data_server(status_editing){
     }
   }
 }
+
+
+$('#form_extension').on('click', '.btn-edit', function () {
+  $('#link_edit_ex').val($(this).attr('href'));
+  $('#form_extension #title_link_edit_ex').text('Link '+$(this).attr('data-link'));
+})
+
+
+$('#form_extension #update_link_ex').on('click',function () {
+  if($(this).attr('href') != $('#link_edit_ex').val()){
+    let name = $('#form_extension #title_link_edit_ex').text().replace("Link ","");
+    add_href3(name, $(this).attr('href'), $('#link_edit_ex').val())
+    $('#form_extension .btn-cancel').click();
+    set_data_local_storage(true);
+  }
+  
+})

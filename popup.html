@@ -56,7 +56,7 @@
             style="background-color: rgba(0, 0, 0, 0.6);z-index: 999; position: fixed;top: 0;bottom: 0;left: 0;right: 0;display: none;"><div><img
                     src="https://i.gifer.com/ZZ5H.gif"
                     style="margin: 0 auto;width: 60px;height: 60px;" /></div></div>
-        <div class="m-2">
+        <div class="m-2" id="form_extension">
             <div class="mb-1">
                 <h1 class="d-none" id="domain_name"></h1>
             </div>
@@ -71,6 +71,13 @@
                 <label for="desc"
                     class="form-label font-size-sm mb-0 fw-semibold pb-0">Desc:</label>
                 <textarea class="form-control font-size-sm" id="desc_ex"
+                    rows="2"></textarea>
+            </div>
+            <div class="mb-1">
+                <label for="list_service"
+                    class="form-label font-size-sm mb-0 fw-semibold pb-0">List
+                    service:</label>
+                <textarea class="form-control font-size-sm" id="list_service_ex"
                     rows="2"></textarea>
             </div>
             <div class="mb-1">
@@ -96,7 +103,7 @@
                     class="form-label font-size-sm mb-0 fw-semibold pb-0">Social:</label>
                 <div class="d-flex justify-content-center">
                     <div class="btn-group button-list">
-                        <a href="" class="facebook">
+                        <a href=""  data-link="facebook" class="facebook btn-edit" data-bs-toggle="modal" data-bs-target="#model-edit">
                             <button type="button"
                                 class="btn btn-outline-secondary btn-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -108,7 +115,7 @@
                                 </svg>
                             </button>
                         </a>
-                        <a href="" class="instagram">
+                        <a href=""  data-link="instagram" class="instagram btn-edit" data-bs-toggle="modal" data-bs-target="#model-edit">
                             <button type="button"
                                 class="btn btn-outline-secondary btn-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +127,7 @@
                                 </svg>
                             </button>
                         </a>
-                        <a href="" class="twitter">
+                        <a href=""  data-link="twitter" class="twitter btn-edit" data-bs-toggle="modal" data-bs-target="#model-edit">
                             <button type="button"
                                 class="btn btn-outline-secondary btn-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -132,7 +139,7 @@
                                 </svg>
                             </button>
                         </a>
-                        <a href="" class="linkedin">
+                        <a href=""  data-link="linkedin" class="linkedin btn-edit" data-bs-toggle="modal" data-bs-target="#model-edit">
                             <button type="button"
                                 class="btn btn-outline-secondary btn-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -145,7 +152,7 @@
                             </button>
                         </a>
 
-                        <a href="" class="tiktok">
+                        <a href=""  data-link="tiktok" class="tiktok btn-edit" data-bs-toggle="modal" data-bs-target="#model-edit">
                             <button type="button"
                                 class="btn btn-outline-secondary btn-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -159,7 +166,7 @@
                             </button>
                         </a>
 
-                        <a href="" class="youtube">
+                        <a href=""  data-link="youtube" class="youtube btn-edit" data-bs-toggle="modal" data-bs-target="#model-edit">
                             <button type="button"
                                 class="btn btn-outline-secondary btn-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -172,7 +179,7 @@
                             </button>
                         </a>
 
-                        <a href="" class="pinterest">
+                        <a href=""  data-link="pinterest" class="pinterest btn-edit" data-bs-toggle="modal" data-bs-target="#model-edit">
                             <button type="button"
                                 class="btn btn-outline-secondary btn-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -193,7 +200,7 @@
                     class="form-label font-size-sm mb-0 fw-semibold pb-0">App:</label>
                 <div class="d-flex justify-content-center">
                     <div class="btn-group button-list">
-                        <a href="" class="ggplay">
+                        <a href="" data-link="ggplay" class="ggplay btn-edit" data-bs-toggle="modal" data-bs-target="#model-edit">
                             <button type="button"
                                 class="btn btn-outline-secondary btn-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -205,7 +212,7 @@
                                 </svg>
                             </button>
                         </a>
-                        <a href="" class="appstore">
+                        <a href="" data-link="appstore" class="appstore btn-edit" data-bs-toggle="modal" data-bs-target="#model-edit">
                             <button type="button"
                                 class="btn btn-outline-secondary btn-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -221,6 +228,37 @@
                     </div>
                 </div>
             </div>
+
+            <div id="model-edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered" role="document">
+                    <div class="modal-content shadow-dark-80">
+                        <div class="modal-header border-0 pb-0 d-flex justify-content-end ps-4">
+                            <button type="button" class="btn btn-icon p-0" data-bs-dismiss="modal" aria-label="Close">
+                                <svg data-name="icons/tabler/close" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 16 16">
+                                    <rect data-name="Icons/Tabler/Close background" width="16" height="16" fill="none"></rect>
+                                    <path
+                                        d="M.82.1l.058.05L6,5.272,11.122.151A.514.514,0,0,1,11.9.82l-.05.058L6.728,6l5.122,5.122a.514.514,0,0,1-.67.777l-.058-.05L6,6.728.878,11.849A.514.514,0,0,1,.1,11.18l.05-.058L5.272,6,.151.878A.514.514,0,0,1,.75.057Z"
+                                        transform="translate(2 2)" fill="#1e1e1e"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="modal-body pt-2 px-4">
+                            <div class="mb-3">
+                                <label for="link_edit" class="form-label font-size-sm fw-semibold" id="title_link_edit_ex">Link</label>
+                                <input type="link_edit" class="form-control font-size-sm fw-semibold" id="link_edit_ex">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light px-2 btn-cancel font-size-sm fw-semibold" data-bs-dismiss="modal"><span
+                                    class="px-1">Cancel</span></button>
+                            <button type="button" class="btn-save btn btn-success px-2 ms-2 font-size-sm fw-semibold" data-btn="update"><span
+                                    class="px-1" id="update_link_ex">Save</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="alert alert-success font-size-sm" id="successAlert"
                 style="display: none;">

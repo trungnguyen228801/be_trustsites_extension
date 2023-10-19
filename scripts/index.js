@@ -14,7 +14,7 @@ try {
     ifrDiv.style.setProperty('top', '50px', 'important');
     ifrDiv.style.setProperty('right', '100px', 'important');
     ifrDiv.style.setProperty('width', '350px', 'important');
-    ifrDiv.style.setProperty('height', '605px', 'important');
+    ifrDiv.style.setProperty('height', '676px', 'important');
     ifrDiv.style.setProperty('background-color', 'rgb(225, 225, 225)', 'important');
     ifrDiv.style.setProperty('box-shadow', 'rgb(204, 204, 204) 1px 1px 1px 1px', 'important');
     ifrDiv.style.setProperty('padding', '15px', 'important');
@@ -41,7 +41,7 @@ try {
     iframe.setAttribute('topmargin', '0');
     iframe.setAttribute('leftmargin', '0');
     iframe.style.setProperty('width', '320px', 'important');
-    iframe.style.setProperty('height', '575px', 'important');
+    iframe.style.setProperty('height', '646px', 'important');
     iframe.style.setProperty('position', 'absolute', 'important');
     iframe.style.setProperty('cursor', 'pointer', 'important');
     ifrDiv.appendChild(iframe);

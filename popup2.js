@@ -56,7 +56,7 @@ function doSomething() {
 
 
     var timeout = null;
-    $('#list_keyword_ex, #phone_ex, #email_ex, #address_ex, #desc_ex').on('input', function () {
+    $('#list_keyword_ex, #list_service_ex, #phone_ex, #email_ex, #address_ex, #desc_ex').on('input', function () {
       clearTimeout(timeout);
       timeout = setTimeout(function () {
         // let data_tmp = JSON.parse(chrome.storage.local.get([currentDomain]));
@@ -85,6 +85,7 @@ function doSomething() {
             $("#update_infor").text("Add");
           }
           $("#list_keyword_ex").val(data_tmp.list_keyword);
+          $("#list_service_ex").val(data_tmp.list_service);
           $("#desc").val(data_tmp.desc);
           $("#address").val(data_tmp.address);
           add_href("facebook", data_tmp.link_facebook);
@@ -104,6 +105,7 @@ function doSomething() {
           var res = JSON.parse(data);
           if (res.code == 'have') {
             $("#list_keyword_ex").val(res.list_keyword);
+            $("#list_service_ex").val(res.list_service);
             $("#desc").val(res.desc);
             $("#address").val(res.address);
 
@@ -146,6 +148,7 @@ function doSomething() {
       $("#loadingSpinner").hide();
 
       let list_keyword = $("#list_keyword_ex").val();
+      let list_service = $("#list_service_ex").val();
       let desc = $("#desc_ex").val();
       let phone = $("#phone_ex").val();
       let email = $("#email_ex").val();
@@ -167,7 +170,7 @@ function doSomething() {
         url: 'https://trustsites.net/tool/trung/api_extension/update_domain.php',
         data: {
           key: 'HPHA*HFN$%*',
-          auther_email: 'trungnguyen228801@gmail.com',
+          auther_email: 'anhthuh481@gmail.com',
           domain: currentDomain,
           list_keyword,
           desc,
@@ -273,6 +276,7 @@ function set_data_local_storage(editing) {
   sendMessage(activeTab, "SET_DATA_LOCAL_STORAGE", {
     data_ex: JSON.stringify({
       list_keyword: $("#list_keyword_ex").val(),
+      list_service: $("#list_service_ex").val(),
       desc: $("#desc_ex").val(),
       address: $("#address_ex").val(),
       phone: $("#phone_ex").val(),

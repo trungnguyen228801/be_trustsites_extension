@@ -1,141 +1,153 @@
+function convertDate(inputString) {
+    // Parse the input date string
+    const date = new Date(inputString);
+
+    // Function to add leading zero for single digit numbers
+    const pad = (num) => (num < 10 ? '0' + num : num);
+
+    // Format the date and time components
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1); // getMonth() returns 0-11
+    const day = pad(date.getDate());
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+    const seconds = pad(date.getSeconds());
+
+    // Combine components into the final format
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+function singleElement(xpath, param_document, param_XPathResult, get_type) {
+    var result = param_document.evaluate(xpath, param_document, null, param_XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+    var element = result.singleNodeValue;
+    var result = '';
+    if (element) {
+        if (get_type.type === 'attribute') {
+            result = element.getAttribute(get_type.attr);
+        } else if (get_type.type === 'text') {
+            result = element.textContent.trim();
+        } else {
+            result = '';
+        }
+    }
+    return result;
+}
+
+function listElements(xpath, param_document, param_XPathResult, get_type) {
+    var result = param_document.evaluate(xpath, param_document, null, param_XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+    var node;
+    var list_elm = [];
+    while (node = result.iterateNext()) {
+        list_elm.push(node);
+    }
+    var list_result = [];
+    if (list_elm != []) {
+        list_elm.forEach(element => {
+            if (get_type.type === 'attribute') {
+                list_result.push(element.getAttribute(get_type.attr));
+            } else if (get_type.type === 'text') {
+                list_result.push(element.textContent.trim());
+            }
+        });
+    }
+    return list_result;
+}
 
 chrome.runtime.onMessage.addListener(async (obj, sender, response) => {
     let currentUrl = window.location.href;
-
-// Use the URL object to parse the URL and extract the domain
-let urlObject = new URL(currentUrl);
-let domain = urlObject.hostname.replace("www.", "");
+    // Use the URL object to parse the URL and extract the domain
+    let urlObject = new URL(currentUrl);
+    let domain = urlObject.hostname.replace("www.", "");
 
     const { action, data } = obj;
-    if (action == "SOCIAL" || action == "SOCIAL_REPLACE") {
+    if (action == "GET_DATA_GAME") {
+        if (domain == 'gamedistribution.com') {
+            let link = singleElement("//a[contains(text(), 'Open') and @class='gd-button' and contains(@href,'https://html5.gamedistribution.com/')]", document, XPathResult, { 'type': 'attribute', 'attr': 'href' });
+            let name = singleElement("//h1", document, XPathResult, { 'type': 'text' });
+            let slug = currentUrl.split('https://gamedistribution.com/games/').pop();
+            let time_published = convertDate(singleElement("//span[@class='label' and text()='Published']/../span[2]", document, XPathResult, { 'type': 'text' }));
+            let game_type = singleElement("//span[@class='label' and text()='Type']/../span[2]", document, XPathResult, { 'type': 'text' });
+            let web = singleElement("//span[@class='label' and text()='HTTPS ready']/../span[2]", document, XPathResult, { 'type': 'text' });
+            let mobile = singleElement("//span[@class='label' and text()='Mobile ready']/../span[2]", document, XPathResult, { 'type': 'text' });
+            let is_blood = singleElement("//span[@class='label' and text()='No Blood']/../span[2]", document, XPathResult, { 'type': 'text' });
+            let is_kid = singleElement("//span[@class='label' and text()='Kids Friendly']/../span[2]", document, XPathResult, { 'type': 'text' });
+            let dimensions = singleElement("//span[@class='label' and text()='Dimensions']/../span[2]", document, XPathResult, { 'type': 'text' });
+            let company = singleElement("//span[@class='label company' and text()='Company']/../span[2]/a", document, XPathResult, { 'type': 'text' });
 
-        let elm_facebook = document.querySelector("a[href^='https://facebook.com/'], a[href^='https://www.facebook.com/'], a[href^='http://facebook.com/'], a[href^='http://www.facebook.com/']");
-        let link_facebook = elm_facebook ? elm_facebook.getAttribute("href") : "";
-
-        let elm_instagram = document.querySelector("a[href^='https://instagram.com/'], a[href^='https://www.instagram.com/'], a[href^='http://instagram.com/'], a[href^='http://www.instagram.com/']");
-        let link_instagram = elm_instagram ? elm_instagram.getAttribute("href") : "";
-
-        let elm_twitter = document.querySelector("a[href^='https://twitter.com/'], a[href^='https://www.twitter.com/'], a[href^='http://twitter.com/'], a[href^='http://www.twitter.com/']");
-        let link_twitter = elm_twitter ? elm_twitter.getAttribute("href") : "";
-
-        let elm_youtube = document.querySelector("a[href^='https://youtube.com/'], a[href^='https://www.youtube.com/'], a[href^='http://youtube.com/'], a[href^='http://www.youtube.com/']");
-        let link_youtube = elm_youtube ? elm_youtube.getAttribute("href") : "";
-
-        let elm_linkedin = document.querySelector("a[href^='https://linkedin.com/'], a[href^='https://www.linkedin.com/'], a[href^='http://linkedin.com/'], a[href^='http://www.linkedin.com/']");
-        let link_linkedin = elm_linkedin ? elm_linkedin.getAttribute("href") : "";
-
-        let elm_pinterest = document.querySelector("a[href^='https://pinterest.com/'], a[href^='https://www.pinterest.com/'], a[href^='http://pinterest.com/'], a[href^='http://www.pinterest.com/']");
-        let link_pinterest = elm_pinterest ? elm_pinterest.getAttribute("href") : "";
-
-        let elm_tiktok = document.querySelector("a[href^='https://tiktok.com/'], a[href^='https://www.tiktok.com/'], a[href^='http://tiktok.com/'], a[href^='http://www.tiktok.com/']");
-        let link_tiktok = elm_tiktok ? elm_tiktok.getAttribute("href") : "";
-
-        let elm_googleplay = document.querySelector("a[href*='//play.google.com/store/apps/details?'], a[href*='//www.play.google.com/store/apps/details?'], a[href*='//play.google.com/store/apps/details?'], a[href*='//www.play.google.com/store/apps/details?']");
-        let link_googleplay = elm_googleplay ? elm_googleplay.getAttribute("href") : "";
-        
-        let elm_appstore = document.querySelector("a[href*='//apps.apple.com/us/app/'], a[href*='//www.apps.apple.com/us/app/'], a[href*='//apps.apple.com/us/app/'], a[href*='//www.apps.apple.com/us/app/'], a[href*='//itunes.apple.com/us/app/'], a[href*='//www.itunes.apple.com/us/app/'], a[href*='//itunes.apple.com/us/app/'], a[href*='//www.itunes.apple.com/us/app/']");
-        let link_appstore = elm_appstore ? elm_appstore.getAttribute("href") : "";
-
-        //email
-        const xpathExpression = "//*[contains(text(), '@')]";
-        const result = document.evaluate(xpathExpression, document, null, XPathResult.ANY_TYPE, null);
-        let str_email = '';
-        let node = result.iterateNext();
-        while (node) {
-            const text = node.textContent;
-            const emails = text.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b/g); // Regex để tìm email
-            if (emails) {
-                str_email = emails[0];
-                break;
+            let categories = []
+            let list_categories = listElements("//span[@class='label' and text()='Categories']/..//a[@class='pill']", document, XPathResult, { 'type': 'text' });
+            if (list_categories != []) {
+                list_categories.forEach(function (item) {
+                    categories.push({ 'name_cate': item });
+                });
+            }else{
+                categories.push({'name_cate':'Non-genre'});
             }
-            node = result.iterateNext();
-        }
-        //phone
-        let elm_phone = document.querySelector('a[href^="tel:"]');
-        let phone = elm_phone ? elm_phone.getAttribute("href").replace("tel:", "") : "";
 
-        if(action == "SOCIAL"){
+            let tags = []
+            let list_result_tags = listElements("//span[@class='label' and text()='Tags']/..//div[@class='tag-list']/a", document, XPathResult, { 'type': 'text' });
+            if (list_result_tags != []) {
+                list_result_tags.forEach(function (item) {
+                    tags.push({ 'name_tag': item });
+                });
+            }
+            let langs = []
+            let list_result_langs = listElements("//span[@class='label' and text()='Languages']/..//div[@class='language-list']/a", document, XPathResult, { 'type': 'text' });
+            if (list_result_langs != []) {
+                list_result_langs.forEach(function (item) {
+                    langs.push({ 'name_lang': item });
+                });
+            }
+            let description = singleElement("//span[@class='label' and text()='Description']/../span[2]", document, XPathResult, { 'type': 'text' });
             chrome.runtime.sendMessage({
-                type: 'link_social',
+                type: 'add_game_distribution_extension',
                 domain,
-                data:{
-                    link_facebook, link_instagram, link_twitter, link_youtube, link_linkedin, link_pinterest, link_tiktok, phone, str_email, link_appstore, link_googleplay,
+                data: {
+                    link, name, slug, time_published, game_type, web, mobile, is_blood, is_kid, dimensions, company, categories, tags, langs, description,
                 }
             })
-        }else{
+        }
+
+        if (domain == 'gamemonetize.com') {
+            let link = singleElement("//div[@id='tabcliboarddirect']//textarea[@id='urlTextAreaId']", document, XPathResult, { 'type': 'text' });
+            let name = singleElement("//h2", document, XPathResult, { 'type': 'attribute', 'attr': 'data-text' });
+            let slug = currentUrl.replace('https://gamemonetize.com/', "").replace('-game', "");
+            let time_published = convertDate(singleElement("//div[@class='unit-card unit-card_accent dev-platform__item']/p[contains(text(),'Published')]/../following-sibling::p[1]", document, XPathResult, { 'type': 'text' }));
+            let game_type = 'Html5';
+            let web = 'Yes';
+            let mobile = singleElement("//div[@class='unit-card unit-card_accent dev-platform__item']/p[contains(text(),'Mobile Ready')]", document, XPathResult, { 'type': 'text' }).split('Mobile Ready :').pop().split(' ').pop();
+            let is_blood = 'No';
+            let is_kid = 'Yes';
+            let dimensions = singleElement("//div[@class='unit-card unit-card_accent dev-platform__item']/p[contains(text(),'Size')]/../following-sibling::p[1]", document, XPathResult, { 'type': 'text' });
+            let company = singleElement("//*[@id='companyLinkId']", document, XPathResult, { 'type': 'text' });
+
+            let categories = []
+            let list_categories = listElements("//div[@class='unit-card unit-card_accent dev-platform__item']/p[contains(text(),'Category')]/../following-sibling::ul[1]/li/a", document, XPathResult, { 'type': 'text' });
+            if (list_categories != []) {
+                list_categories.forEach(function (item) {
+                    categories.push({ 'name_cate': item });
+                });
+            }else{
+                categories.push({'name_cate':'Non-genre'});
+            }
+
+            let tags = []
+            let list_result_tags = listElements("//div[@class='unit-card unit-card_accent dev-platform__item']/p[contains(text(),'Tags')]/../following-sibling::ul[1]/li/a", document, XPathResult, { 'type': 'text' });
+            if (list_result_tags != []) {
+                list_result_tags.forEach(function (item) {
+                    tags.push({ 'name_tag': item });
+                });
+            }
+
+            let description = singleElement("//div[@class='unit-card unit-card_accent dev-platform__item']/p[contains(text(),'Description')]/../following-sibling::p[1]", document, XPathResult, { 'type': 'text' });
+            let instruction = singleElement("//div[@class='unit-card unit-card_accent dev-platform__item']/p[contains(text(),'Instructions')]/../following-sibling::p[1]", document, XPathResult, { 'type': 'text' });
             chrome.runtime.sendMessage({
-                type: 'link_social_replace',
+                type: 'add_game_monetize_extension',
                 domain,
-                data:{
-                    link_facebook, link_instagram, link_twitter, link_youtube, link_linkedin, link_pinterest, link_tiktok, phone, str_email, link_appstore, link_googleplay,
+                data: {
+                    link, name, slug, time_published, game_type, web, mobile, is_blood, is_kid, dimensions, company, categories, tags, description, instruction,
                 }
             })
         }
-
-    }else if(action == "SET_DATA_LOCAL_STORAGE"){
-        localStorage.setItem('data_ex', data.data_ex);
-        if(data.editing){
-            chrome.runtime.sendMessage({
-                type: 'lastest_update_popup',
-                data:data.data_ex,
-                domain
-            })
-        }
-    }else if(action == "GET_DATA_LOCAL_STORAGE"){
-        if(data.change_editing){
-            changeEditing(data.editing);
-        }
-        chrome.runtime.sendMessage({
-            type: 'data_local_storage',
-            data:localStorage.getItem('data_ex'),
-        })
-    }else if(action == "RESET_LOCAL_STORAGE"){
-        localStorage.removeItem('data_ex');
-        chrome.runtime.sendMessage({
-            type: 'reset_local_storage',
-            domain
-        })
     }
-    
 });
-
-function setWithExpiry(key, value, ttl) {
-	const now = new Date()
-
-	// `item` is an object which contains the original value
-	// as well as the time when it's supposed to expire
-	const item = {
-		value: value,
-		expiry: now.getTime() + ttl,
-	}
-	localStorage.setItem(key, JSON.stringify(item))
-}
-
-function getWithExpiry(key) {
-	const itemStr = localStorage.getItem(key)
-	// if the item doesn't exist, return null
-	if (!itemStr) {
-		return null
-	}
-	const item = JSON.parse(itemStr)
-	const now = new Date()
-	// compare the expiry time of the item with the current time
-	if (now.getTime() > item.expiry) {
-		// If the item is expired, delete the item from storage
-		// and return null
-		localStorage.removeItem(key)
-		return null
-	}
-	return item.value;
-}
-
-function changeEditing(editing) {
-    console.log("editing", editing);
-    const itemStr = localStorage.getItem('data_ex');
-	if (!itemStr) {
-		return null;
-	}
-	const item = JSON.parse(itemStr);
-    item.editing = editing;
-    localStorage.setItem('data_ex', JSON.stringify(item))
-}

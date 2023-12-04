@@ -17,7 +17,9 @@
                 "avatar_extension.png"
             ],
             "matches": [
-                "<all_urls>"
+                "https://gamedistribution.com/*",
+                "https://gamemonetize.com/*",
+                "https://www.freegames66.com/*"
             ]
         }
     ],
@@ -27,7 +29,11 @@
                 "scripts/content.js",
                 "scripts/index.js"
             ],
-            "matches": ["<all_urls>"]
+            "matches": [
+                "https://gamedistribution.com/*",
+                "https://gamemonetize.com/*",
+                "https://www.freegames66.com/*"
+            ]
         }
     ],
     "permissions": [
